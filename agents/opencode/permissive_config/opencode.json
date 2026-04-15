@@ -1,0 +1,36 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "*": "allow",
+    "question": "deny",
+    "bash": {
+      "*": "allow"
+    },
+    "read": {
+      "*": "allow"
+    },
+    "edit": {
+      "*": "allow"
+    },
+    "write": {
+      "*": "allow"
+    },
+    "external_directory": {
+      "*": "allow",
+      "/task/*": "allow",
+      "/output/*": "allow"
+    },
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "skill": "allow",
+    "todoread": "allow",
+    "todowrite": "allow",
+    "webfetch": "allow",
+    "task": "allow"
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true
+  }
+}
