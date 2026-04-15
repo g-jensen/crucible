@@ -1,0 +1,1 @@
+cp -r ./permissive_config $ABSOLUTE_RESULT_DIR/opencode_config
