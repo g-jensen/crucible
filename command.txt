@@ -1,1 +1,1 @@
-./container-agent --results-dir ./results --task ./example_task.yml --agent-dir ./agents/opencode
+crucible --results-dir ./results --task ./example/task.yml --agent-dir ./agents/opencode
