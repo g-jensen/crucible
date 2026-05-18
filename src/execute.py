@@ -19,3 +19,7 @@ def run_docker_compose(agent_dir: str, result_dir: str, image: str, prompt: str)
         ["docker", "compose", "up"], cwd=agent_dir + "/docker", env=env
     )
     return result.returncode
+
+
+def run_docker_compose_down(agent_dir: str):
+    subprocess.run(["docker", "compose", "down"], cwd=agent_dir + "/docker")
