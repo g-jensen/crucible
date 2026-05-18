@@ -1,3 +1,4 @@
+import pytest
 import task as sut
 
 
@@ -22,3 +23,10 @@ prompt: "Do something"
     assert "python:3.11-slim" == result["docker_image"]
     assert "./seed" == result["seed_path"]
     assert "Do something" == result["prompt"]
+
+
+def test__validate_task__missing_required_field():
+    task = {"docker_image": "python:3.11-slim", "prompt": "Do something"}
+
+    with pytest.raises(ValueError):
+        sut.validate_task(task)
