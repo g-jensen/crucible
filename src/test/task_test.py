@@ -60,3 +60,8 @@ prompt: "Do something"
     result = sut.resolve_seed_path("/project/task.yml", "./seed")
 
     assert "/project/seed" == result
+
+
+def test__validate_seed_path__raises_when_path_missing(fs):
+    with pytest.raises(ValueError):
+        sut.validate_seed_path("/path/to/nonexistent/seed")

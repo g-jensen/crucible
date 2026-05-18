@@ -18,3 +18,8 @@ def validate_task(task: dict):
 def resolve_seed_path(task_path: str, seed_path: str) -> str:
     task_dir = Path(task_path).parent
     return str(task_dir / seed_path)
+
+
+def validate_seed_path(seed_path: str):
+    if not Path(seed_path).exists():
+        raise ValueError()
