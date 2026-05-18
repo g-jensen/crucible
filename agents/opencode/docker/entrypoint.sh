@@ -1,1 +1,1 @@
-# TODO - install & run opencode
+# TODO - install & run opencode with TASK_PROMPT
