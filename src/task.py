@@ -9,3 +9,5 @@ def load_task(path: str) -> dict:
 def validate_task(task: dict):
     if "id" not in task:
         raise ValueError()
+    if "docker_image" not in task:
+        raise ValueError()

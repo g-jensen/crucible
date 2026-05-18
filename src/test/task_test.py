@@ -30,3 +30,10 @@ def test__validate_task__missing_required_field():
 
     with pytest.raises(ValueError):
         sut.validate_task(task)
+
+
+def test__validate_task__missing_docker_image():
+    task = {"id": "example_task", "prompt": "Do something"}
+
+    with pytest.raises(ValueError):
+        sut.validate_task(task)
