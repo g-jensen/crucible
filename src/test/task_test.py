@@ -1,0 +1,24 @@
+import task as sut
+
+
+def test__load_task__valid_task_with_all_fields(fs):
+    fs.create_file(
+        "/path/to/task.yml",
+        contents="""\
+id: example_task
+name: Example Task
+description: Basic task
+docker_image: python:3.11-slim
+seed_path: ./seed
+prompt: "Do something"
+""",
+    )
+
+    result = sut.load_task("/path/to/task.yml")
+
+    assert "example_task" == result["id"]
+    assert "Example Task" == result["name"]
+    assert "Basic task" == result["description"]
+    assert "python:3.11-slim" == result["docker_image"]
+    assert "./seed" == result["seed_path"]
+    assert "Do something" == result["prompt"]
