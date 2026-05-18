@@ -37,3 +37,10 @@ def test__validate_task__missing_docker_image():
 
     with pytest.raises(ValueError):
         sut.validate_task(task)
+
+
+def test__validate_task__missing_prompt():
+    task = {"id": "example_task", "docker_image": "python:3.11-slim"}
+
+    with pytest.raises(ValueError):
+        sut.validate_task(task)
