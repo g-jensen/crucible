@@ -44,3 +44,19 @@ def test__validate_task__missing_prompt():
 
     with pytest.raises(ValueError):
         sut.validate_task(task)
+
+
+def test__resolve_seed_path__relative_to_task_file(fs):
+    fs.create_file(
+        "/project/task.yml",
+        contents="""\
+id: example_task
+docker_image: python:3.11-slim
+seed_path: ./seed
+prompt: "Do something"
+""",
+    )
+
+    result = sut.resolve_seed_path("/project/task.yml", "./seed")
+
+    assert "/project/seed" == result

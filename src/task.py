@@ -13,3 +13,8 @@ def validate_task(task: dict):
     for field in REQUIRED_FIELDS:
         if field not in task:
             raise ValueError()
+
+
+def resolve_seed_path(task_path: str, seed_path: str) -> str:
+    task_dir = Path(task_path).parent
+    return str(task_dir / seed_path)
