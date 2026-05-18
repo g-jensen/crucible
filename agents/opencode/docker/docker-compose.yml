@@ -4,5 +4,6 @@ services:
     working_dir: ${WORKING_DIR}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
+      - ${ABSOLUTE_RESULT_DIR}/workspace:${WORKING_DIR}
       - ${ABSOLUTE_RESULT_DIR}/opencode_config:/root/.config/opencode:rw
     command: ["/entrypoint.sh"]
