@@ -2,6 +2,8 @@ services:
   agent:
     image: ${IMAGE_NAME}
     working_dir: ${WORKING_DIR}
+    environment:
+      - TASK_PROMPT=${TASK_PROMPT}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
       - ${ABSOLUTE_RESULT_DIR}/workspace:${WORKING_DIR}
