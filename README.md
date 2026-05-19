@@ -58,6 +58,7 @@ This will:
 
 ### Basic Command
 
+With `--results-dir` (creates timestamped subdirectory):
 ```bash
 python3 src/main.py \
   --results-dir <results-directory> \
@@ -65,24 +66,58 @@ python3 src/main.py \
   --agent-dir <path-to-agent-directory>
 ```
 
+With `--run-dir` (uses exact directory):
+```bash
+python3 src/main.py \
+  --run-dir <exact-output-directory> \
+  --task <path-to-task.yml> \
+  --agent-dir <path-to-agent-directory>
+```
+
 ### Command-Line Options
 
-- `--results-dir` (required): Directory where run results will be stored
-- `--task` (required): Path to task YAML file
-- `--agent-dir` (required): Path to agent directory
-- `--keep` (optional): Keep container running after exit (skip cleanup)
+**Output Directory (choose one):**
+- `--results-dir <dir>`: Creates a timestamped subdirectory for this run (e.g., `results/example_task_20260518143022_a3f9/`)
+- `--run-dir <dir>`: Uses the exact directory specified (creates it if it doesn't exist)
 
-### Example with --keep Flag
+**Required:**
+- `--task <path>`: Path to task YAML file
+- `--agent-dir <path>`: Path to agent directory
 
+**Optional:**
+- `--keep`: Keep container running after exit (skip cleanup)
+
+**Note:** `--results-dir` and `--run-dir` are mutually exclusive - you must specify exactly one.
+
+### Examples
+
+**Standard run with automatic naming:**
+```bash
+python3 src/main.py \
+  --results-dir ./results \
+  --task example/task.yml \
+  --agent-dir agents/opencode
+# Creates: ./results/example_task_20260518143022_a3f9/
+```
+
+**Run with specific output directory:**
+```bash
+python3 src/main.py \
+  --run-dir /tmp/my-test-run \
+  --task example/task.yml \
+  --agent-dir agents/opencode
+# Creates: /tmp/my-test-run/
+```
+
+**Debug run (keeps container running):**
 ```bash
 python3 src/main.py \
   --results-dir ./results \
   --task example/task.yml \
   --agent-dir agents/opencode \
   --keep
+# Useful for debugging - container stays running for inspection
 ```
-
-The `--keep` flag is useful for debugging - it leaves the Docker container running so you can inspect its state.
 
 ## Task Files
 
@@ -210,7 +245,9 @@ my-ai-agent run "$TASK_PROMPT"
 
 ## Run Directory Structure
 
-Each run creates a unique directory:
+### With --results-dir (automatic naming)
+
+Each run creates a timestamped subdirectory:
 
 ```
 results/
@@ -228,6 +265,25 @@ results/
 - `task_id`: From task.yml
 - `timestamp`: YYYYMMDDHHmmss format
 - `hash`: 8-character random hex for uniqueness
+
+### With --run-dir (exact directory)
+
+Uses the exact directory specified:
+
+```
+/tmp/my-test-run/
+  workspace/                      # Seed files + agent outputs
+    result.txt
+    script.py
+  agent_config/                   # Created by init.sh
+    config.json
+  logs/                           # Created by agent
+    agent.log
+```
+
+The directory is created if it doesn't exist. No timestamp or hash is added.
+
+### General Notes
 
 Run directories are **never deleted** by Crucible, even on error.
 
