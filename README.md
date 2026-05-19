@@ -97,9 +97,6 @@ crucible \
 - `--task <path>`: Path to task YAML file
 - `--agent-dir <path>`: Path to agent directory
 
-**Optional:**
-- `--keep`: Keep container running after exit (skip cleanup)
-
 **Note:** `--results-dir` and `--run-dir` are mutually exclusive - you must specify exactly one.
 
 ### Example Workflow
@@ -152,16 +149,6 @@ crucible \
   --task example/task.yml \
   --agent-dir agents/opencode
 # Creates: /tmp/my-test-run/
-```
-
-**Debug run (keeps container running):**
-```bash
-crucible \
-  --results-dir ./results \
-  --task example/task.yml \
-  --agent-dir agents/opencode \
-  --keep
-# Useful for debugging - container stays running for inspection
 ```
 
 ## Task Files
