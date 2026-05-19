@@ -11,7 +11,7 @@ def create_run_dir(results_dir: str, task_id: str) -> str:
     dir_name = f"{task_id}_{timestamp}_{hash_value}"
     full_path = Path(results_dir) / dir_name
     full_path.mkdir(parents=True, exist_ok=True)
-    return str(full_path)
+    return str(full_path.resolve())
 
 
 def copy_seed_to_workspace(seed_path: str, workspace_path: str):

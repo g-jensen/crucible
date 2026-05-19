@@ -17,6 +17,14 @@ def test__create_run_dir__creates_directory_with_timestamp(fs):
     assert f"/results/{dir_name}" == result
 
 
+def test__create_run_dir__returns_absolute_path(fs):
+    fs.create_dir("./results")
+
+    result = sut.create_run_dir("./results", "test_task")
+
+    assert os.path.isabs(result)
+
+
 def test__copy_seed_to_workspace__copies_files_recursively(fs):
     fs.create_file("/seed/test.txt", contents="hello")
     fs.create_file("/seed/subdir/nested.txt", contents="world")
