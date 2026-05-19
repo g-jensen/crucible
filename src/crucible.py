@@ -9,7 +9,11 @@ def run(args):
     task_data = task.load_task(args.task)
     task.validate_task(task_data)
     agent.validate_agent_dir(args.agent_dir)
-    run_dir = run_module.create_run_dir(args.results_dir, task_data["id"])
+    if hasattr(args, "run_dir") and args.run_dir:
+        run_dir = str(Path(args.run_dir).resolve())
+        Path(run_dir).mkdir(parents=True, exist_ok=True)
+    else:
+        run_dir = run_module.create_run_dir(args.results_dir, task_data["id"])
     workspace_path = Path(run_dir) / "workspace"
     workspace_path.mkdir()
 

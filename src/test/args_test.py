@@ -39,3 +39,48 @@ def test__parse_args__required_and_optional_flags():
     assert "/path/to/task.json" == result.task
     assert "/path/to/agent" == result.agent_dir
     assert True == result.keep
+
+
+def test__parse_args__accepts_run_dir():
+    test_args = [
+        "--run-dir",
+        "/path/to/run",
+        "--task",
+        "/path/to/task.json",
+        "--agent-dir",
+        "/path/to/agent",
+    ]
+
+    result = sut.parse_args(test_args)
+
+    assert "/path/to/run" == result.run_dir
+    assert "/path/to/task.json" == result.task
+    assert "/path/to/agent" == result.agent_dir
+
+
+def test__parse_args__requires_results_dir_or_run_dir():
+    import pytest
+
+    test_args_without_either = [
+        "--task",
+        "/path/to/task.json",
+        "--agent-dir",
+        "/path/to/agent",
+    ]
+
+    with pytest.raises(SystemExit):
+        sut.parse_args(test_args_without_either)
+
+    test_args_with_both = [
+        "--results-dir",
+        "/path/to/results",
+        "--run-dir",
+        "/path/to/run",
+        "--task",
+        "/path/to/task.json",
+        "--agent-dir",
+        "/path/to/agent",
+    ]
+
+    with pytest.raises(SystemExit):
+        sut.parse_args(test_args_with_both)
