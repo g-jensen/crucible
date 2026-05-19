@@ -24,4 +24,4 @@ def run(args):
     )
 
     if not args.keep:
-        run_docker_compose_down(args.agent_dir)
+        run_docker_compose_down(args.agent_dir, run_dir, task_data["docker_image"])

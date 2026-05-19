@@ -36,9 +36,12 @@ def test__run_docker_compose__executes_with_env_vars(mocker):
 def test__run_docker_compose_down__executes_in_docker_dir(mocker):
     mock_run = mocker.patch("subprocess.run")
 
-    sut.run_docker_compose_down("/agent")
+    sut.run_docker_compose_down("/agent", "/result", "python:3.11-slim")
 
     mock_run.assert_called_once()
     call_args = mock_run.call_args
     assert ["docker", "compose", "down"] == call_args[0][0]
     assert "/agent/docker" == call_args[1]["cwd"]
+    assert "python:3.11-slim" == call_args[1]["env"]["IMAGE_NAME"]
+    assert "/workspace" == call_args[1]["env"]["WORKING_DIR"]
+    assert "/result" == call_args[1]["env"]["ABSOLUTE_RESULT_DIR"]

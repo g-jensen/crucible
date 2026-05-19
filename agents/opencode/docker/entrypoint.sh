@@ -18,7 +18,7 @@ echo "OpenCode installed successfully"
 echo ""
 
 echo "Running OpenCode with task prompt..."
-opencode "$TASK_PROMPT"
+opencode run "$TASK_PROMPT"
 
 EXIT_CODE=$?
 echo ""
