@@ -6,7 +6,7 @@ Crucible runs AI agents inside Docker containers with controlled inputs and capt
 
 - **Isolated Execution**: Runs agents in Docker containers with clean, reproducible environments
 - **Task-Agent Separation**: Define tasks once, test multiple agent implementations
-- **Results Preservation**: Never deletes run directories; each run gets unique timestamped storage
+- **Results Preservation**: Runs are saved to a directory for analysis
 - **Seed Workspaces**: Initialize containers with pre-populated files and directories
 - **Flexible Agent Integration**: Minimal requirements - just provide init.sh and docker-compose.yml
 
@@ -27,7 +27,7 @@ cd crucible
 2. Create a virtual environment and install dependencies:
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
@@ -36,12 +36,25 @@ pip3 install -r requirements.txt
 docker compose version
 ```
 
+### Build
+
+```bash
+pip3 install pyinstall
+```
+
+Then, build main.py:
+```bash
+pyinstaller --onefile src/main.py -n crucible
+```
+
+Make sure you're in your venv when you run this command.
+
 ## Quick Start
 
 Run the included example task with the OpenCode agent:
 
 ```bash
-python3 src/main.py \
+crucible \
   --results-dir ./results \
   --task example/task.yml \
   --agent-dir agents/opencode
@@ -60,7 +73,7 @@ This will:
 
 With `--results-dir` (creates timestamped subdirectory):
 ```bash
-python3 src/main.py \
+crucible \
   --results-dir <results-directory> \
   --task <path-to-task.yml> \
   --agent-dir <path-to-agent-directory>
@@ -68,7 +81,7 @@ python3 src/main.py \
 
 With `--run-dir` (uses exact directory):
 ```bash
-python3 src/main.py \
+crucible \
   --run-dir <exact-output-directory> \
   --task <path-to-task.yml> \
   --agent-dir <path-to-agent-directory>
@@ -93,7 +106,7 @@ python3 src/main.py \
 
 **Standard run with automatic naming:**
 ```bash
-python3 src/main.py \
+crucible \
   --results-dir ./results \
   --task example/task.yml \
   --agent-dir agents/opencode
@@ -102,7 +115,7 @@ python3 src/main.py \
 
 **Run with specific output directory:**
 ```bash
-python3 src/main.py \
+crucible \
   --run-dir /tmp/my-test-run \
   --task example/task.yml \
   --agent-dir agents/opencode
@@ -111,7 +124,7 @@ python3 src/main.py \
 
 **Debug run (keeps container running):**
 ```bash
-python3 src/main.py \
+crucible \
   --results-dir ./results \
   --task example/task.yml \
   --agent-dir agents/opencode \
@@ -307,7 +320,7 @@ code_to_review/
 
 3. **Run Crucible**:
 ```bash
-python3 src/main.py \
+crucible \
   --results-dir ./results \
   --task my-task.yml \
   --agent-dir agents/opencode
