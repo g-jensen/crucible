@@ -20,15 +20,15 @@ Crucible runs AI agents inside Docker containers with controlled inputs and capt
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd container-agent
+git clone https://github.com/g-jensen/crucible.git
+cd crucible
 ```
 
 2. Create a virtual environment and install dependencies:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 3. Verify Docker is running:
@@ -45,11 +45,6 @@ python3 src/main.py \
   --results-dir ./results \
   --task example/task.yml \
   --agent-dir agents/opencode
-```
-
-Or use the integration test script:
-```bash
-./test_integration.sh
 ```
 
 This will:
@@ -309,33 +304,3 @@ Run the integration test:
 ```bash
 ./test_integration.sh
 ```
-
-## Project Structure
-
-```
-.
-├── src/
-│   ├── main.py          # CLI entry point
-│   ├── crucible.py      # Main orchestration
-│   ├── args.py          # Argument parsing
-│   ├── task.py          # Task loading & validation
-│   ├── agent.py         # Agent validation
-│   ├── run.py           # Directory management
-│   ├── execute.py       # Subprocess execution
-│   └── test/            # Unit tests
-├── agents/
-│   └── opencode/        # Example OpenCode agent
-├── example/
-│   ├── task.yml         # Example task
-│   └── seed/            # Example seed files
-├── test_integration.sh  # Integration test
-└── README.md
-```
-
-## License
-
-[Your license here]
-
-## Contributing
-
-[Your contributing guidelines here]
