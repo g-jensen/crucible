@@ -55,16 +55,16 @@ Run the included example task with the OpenCode agent:
 
 ```bash
 crucible \
-  --results-dir ./results \
+  --run-dir ./result \
   --task example/task.yml \
   --agent-dir agents/opencode
 ```
 
 This will:
-1. Create a unique run directory in `./results/`
-2. Copy the seed workspace into the container
-3. Run the OpenCode agent with the task prompt
-4. Save all outputs to the run directory
+1. Create `result/` and start a container
+2. Copy the seed workspace into `result/` and mount it onto the container
+3. Run the OpenCode agent in the container with the specified config and the task prompt
+4. Save all outputs to `result/`
 5. Clean up Docker resources
 
 ## Usage
@@ -102,7 +102,39 @@ crucible \
 
 **Note:** `--results-dir` and `--run-dir` are mutually exclusive - you must specify exactly one.
 
-### Examples
+### Example Workflow
+
+1. **Create a task file** (`my-task.yml`):
+```yaml
+id: code_review
+docker_image: python:3.11-slim
+seed_path: ./code_to_review
+prompt: "Review the Python code in the workspace and suggest improvements"
+```
+
+2. **Prepare seed directory** (`code_to_review/`):
+```
+code_to_review/
+  main.py
+  utils.py
+  README.md
+```
+
+3. **Run Crucible**:
+```bash
+crucible \
+  --results-dir ./results \
+  --task my-task.yml \
+  --agent-dir agents/opencode
+```
+
+4. **Check results**:
+```bash
+ls results/code_review_*/workspace/
+cat results/code_review_*/workspace/review.txt
+```
+
+### More Command Examples
 
 **Standard run with automatic naming:**
 ```bash
@@ -299,38 +331,6 @@ The directory is created if it doesn't exist. No timestamp or hash is added.
 ### General Notes
 
 Run directories are **never deleted** by Crucible, even on error.
-
-## Example Workflow
-
-1. **Create a task file** (`my-task.yml`):
-```yaml
-id: code_review
-docker_image: python:3.11-slim
-seed_path: ./code_to_review
-prompt: "Review the Python code in the workspace and suggest improvements"
-```
-
-2. **Prepare seed directory** (`code_to_review/`):
-```
-code_to_review/
-  main.py
-  utils.py
-  README.md
-```
-
-3. **Run Crucible**:
-```bash
-crucible \
-  --results-dir ./results \
-  --task my-task.yml \
-  --agent-dir agents/opencode
-```
-
-4. **Check results**:
-```bash
-ls results/code_review_*/workspace/
-cat results/code_review_*/workspace/review.txt
-```
 
 ## Troubleshooting
 
