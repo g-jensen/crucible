@@ -1,7 +1,7 @@
 import argparse
 
 
-def parse_args(args_list: list[str]):
+def parse_args(args_list: list[str] | None = None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--results-dir", required=True)
     parser.add_argument("--task", required=True)
