@@ -21,9 +21,10 @@ def run_docker_compose(agent_dir: str, result_dir: str, image: str, prompt: str)
     return result.returncode
 
 
-def run_docker_compose_down(agent_dir: str, result_dir: str, image: str):
+def run_docker_compose_down(agent_dir: str, result_dir: str, image: str, prompt: str):
     env = os.environ.copy()
     env["IMAGE_NAME"] = image
     env["WORKING_DIR"] = "/workspace"
     env["ABSOLUTE_RESULT_DIR"] = result_dir
+    env["TASK_PROMPT"] = prompt
     subprocess.run(["docker", "compose", "down"], cwd=agent_dir + "/docker", env=env)

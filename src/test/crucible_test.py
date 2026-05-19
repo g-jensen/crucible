@@ -38,5 +38,5 @@ def test__run__orchestrates_full_flow(fs, mocker):
     assert "test prompt" == compose_call_args[0][3]
 
     mock_run_compose_down.assert_called_once_with(
-        "/agents/test_agent", compose_call_args[0][1], "python:3.11"
+        "/agents/test_agent", compose_call_args[0][1], "python:3.11", "test prompt"
     )
