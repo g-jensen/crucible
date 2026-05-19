@@ -11,7 +11,7 @@ echo
 
 cleanup() {
     echo "Cleaning up results directory: $RESULTS_DIR"
-    rm -rf "$RESULTS_DIR"
+    rm -rf "$RESULTS_DIR" 2>/dev/null || true
 }
 
 trap cleanup EXIT
