@@ -6,6 +6,6 @@ services:
       - TASK_PROMPT=${TASK_PROMPT}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
-      - ${ABSOLUTE_RESULT_DIR}/workspace:${WORKING_DIR}
+      - ${ABSOLUTE_RESULT_DIR}/workspace:${WORKING_DIR}:rw
       - ${ABSOLUTE_RESULT_DIR}/opencode_config:/root/.config/opencode:rw
     command: ["/entrypoint.sh"]
