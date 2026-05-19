@@ -27,7 +27,7 @@ fi
 echo
 echo "=== Verifying Results ==="
 
-RUN_DIR=$(find "$RESULTS_DIR" -maxdepth 1 -type d -name "run_*" | head -n 1)
+RUN_DIR=$(find "$RESULTS_DIR" -maxdepth 1 -mindepth 1 -type d | head -n 1)
 if [ -z "$RUN_DIR" ]; then
     echo "ERROR: No run directory created"
     exit 1
