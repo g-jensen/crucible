@@ -49,6 +49,12 @@ pyinstaller --onefile src/main.py -n crucible
 
 Make sure you're in your venv when you run this command.
 
+Add the executable to your PATH somehow
+```bash
+sudo cp dist/crucible /usr/local/bin/crucible
+```
+
+
 ## Quick Start
 
 Run the included example task with the OpenCode agent:
