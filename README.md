@@ -39,7 +39,7 @@ docker compose version
 ### Build
 
 ```bash
-pip3 install pyinstall
+pip install pyinstall
 ```
 
 Then, build main.py:
