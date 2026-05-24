@@ -12,7 +12,7 @@ def test__create_run_dir__creates_directory_with_timestamp(fs):
     assert 1 == len(files)
 
     dir_name = files[0]
-    pattern = r"example_task_\d{14}_[a-z0-9]{4,8}"
+    pattern = r"\d{14}_[a-z0-9]{4,8}_example_task"
     assert re.match(pattern, dir_name)
     assert f"/results/{dir_name}" == result
 
