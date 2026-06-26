@@ -1,14 +1,8 @@
-# Crucible - Agent Evaluation Orchestrator
+# Crucible
 
-Crucible runs AI agents inside Docker containers with controlled inputs and captures their outputs for evaluation. It separates task definitions (what to run) from agent implementations (how to run), enabling systematic agent testing across different tasks and configurations.
+## High-level Overview
 
-## Features
-
-- **Isolated Execution**: Runs agents in Docker containers with clean, reproducible environments
-- **Task-Agent Separation**: Define tasks once, test multiple agent implementations
-- **Results Preservation**: Runs are saved to a directory for analysis
-- **Seed Workspaces**: Initialize containers with pre-populated files and directories
-- **Flexible Agent Integration**: Minimal requirements - just provide init.sh and docker-compose.yml
+You define a [task file](https://github.com/g-jensen/crucible/blob/master/example/task.yml) and an [agent directory](https://github.com/g-jensen/crucible/tree/master/agents/pi) (only OpenCode and Pi support for now) that includes both agent configuration and installation scripts. Crucible starts a Docker container, installs the agent, injects specified task information and/or volumes, and waits for the agent to complete the task. It copies relevant output from the agent's environment into a directory of your choosing.
 
 ## Requirements
 
@@ -93,18 +87,6 @@ crucible \
   --agent-dir <path-to-agent-directory>
 ```
 
-### Command-Line Options
-
-**Output Directory (choose one):**
-- `--results-dir <dir>`: Creates a timestamped subdirectory for this run (e.g., `results/example_task_20260518143022_a3f9/`)
-- `--run-dir <dir>`: Uses the exact directory specified (creates it if it doesn't exist)
-
-**Required:**
-- `--task <path>`: Path to task YAML file
-- `--agent-dir <path>`: Path to agent directory
-
-**Note:** `--results-dir` and `--run-dir` are mutually exclusive - you must specify exactly one.
-
 ### Example Workflow
 
 1. **Create a task file** (`my-task.yml`):
@@ -137,26 +119,6 @@ ls results/code_review_*/workspace/
 cat results/code_review_*/workspace/review.txt
 ```
 
-### More Command Examples
-
-**Standard run with automatic naming:**
-```bash
-crucible \
-  --results-dir ./results \
-  --task example/task.yml \
-  --agent-dir agents/opencode
-# Creates: ./results/example_task_20260518143022_a3f9/
-```
-
-**Run with specific output directory:**
-```bash
-crucible \
-  --run-dir /tmp/my-test-run \
-  --task example/task.yml \
-  --agent-dir agents/opencode
-# Creates: /tmp/my-test-run/
-```
-
 ## Task Files
 
 Tasks are defined in YAML files with the following structure:
@@ -166,51 +128,20 @@ id: example_task
 name: Example Task                    # optional
 description: Basic Python I/O task    # optional
 docker_image: python:3.11-slim
-seed_path: ./seed                      # optional, relative to task.yml
+seed_path: ./seed                      # optional. Path is relative to this file
 prompt: "Write and run a simple Python script that writes 'hello' to result.txt"
-```
-
-### Required Fields
-
-- `id`: Unique task identifier (used in run directory naming)
-- `docker_image`: Base Docker image for the container
-- `prompt`: Task instructions passed to the agent
-
-### Optional Fields
-
-- `name`: Human-readable task name
-- `description`: Detailed task description
-- `seed_path`: Path to seed directory (relative to task.yml location)
-  - If specified, contents are copied to `/workspace` in the container
-  - If omitted, an empty workspace is created
-
-### Example Task Files
-
-**Simple task (no seed):**
-```yaml
-id: hello_world
-docker_image: python:3.11-slim
-prompt: "Create a Python script that prints 'Hello, World!'"
-```
-
-**Task with seed workspace:**
-```yaml
-id: data_processing
-docker_image: python:3.11-slim
-seed_path: ./seed_data
-prompt: "Process the CSV file in the workspace and output summary statistics"
 ```
 
 ## Agent Directories
 
-Agent directories must contain two required files:
+Agent directories only *require* an `init.sh` and a `docker/docker-compose.yml`:
 
 ```
 agents/my-agent/
 ├── init.sh                      # Host-side setup script (executable)
 ├── docker/
 │   ├── docker-compose.yml       # Container orchestration
-│   └── entrypoint.sh            # Container entry point script
+│   └── entrypoint.sh            # Entry point script for docker-compose.yml. Could be stored anywhere.
 └── ... (other agent-specific files)
 ```
 
@@ -218,7 +149,7 @@ agents/my-agent/
 
 Runs on the **host machine** before starting the container.
 
-**Environment variables:**
+**Environment variables available:**
 - `ABSOLUTE_RESULT_DIR`: Absolute path to this run's result directory
 
 **Responsibilities:**
@@ -260,7 +191,7 @@ services:
 
 ### entrypoint.sh
 
-Runs **inside the container**.
+This can be shared between agent directories and runs **inside the container** as defined in `docker-compose.yml`.
 
 **Responsibilities:**
 - Install the agent (from internet, package manager, etc.)
@@ -281,50 +212,6 @@ npm install -g my-ai-agent
 my-ai-agent run "$TASK_PROMPT"
 ```
 
-## Run Directory Structure
-
-### With --results-dir (automatic naming)
-
-Each run creates a timestamped subdirectory:
-
-```
-results/
-  example_task_20260518143022_a3f9/
-    workspace/                    # Seed files + agent outputs
-      result.txt
-      script.py
-    agent_config/                 # Created by init.sh
-      config.json
-    logs/                         # Created by agent
-      agent.log
-```
-
-**Naming convention:** `{task_id}_{timestamp}_{hash}`
-- `task_id`: From task.yml
-- `timestamp`: YYYYMMDDHHmmss format
-- `hash`: 8-character random hex for uniqueness
-
-### With --run-dir (exact directory)
-
-Uses the exact directory specified:
-
-```
-/tmp/my-test-run/
-  workspace/                      # Seed files + agent outputs
-    result.txt
-    script.py
-  agent_config/                   # Created by init.sh
-    config.json
-  logs/                           # Created by agent
-    agent.log
-```
-
-The directory is created if it doesn't exist. No timestamp or hash is added.
-
-### General Notes
-
-Run directories are **never deleted** by Crucible, even on error.
-
 ## Troubleshooting
 
 ### Permission Errors in Results Directory
@@ -336,16 +223,12 @@ To clean up manually:
 sudo rm -rf results/example_task_*/
 ```
 
-### "refers to undefined volume" Error
-
-This usually means paths are relative instead of absolute. Crucible automatically converts relative paths, but if you see this error, check that you're running from the project root.
-
 ### Container Exits Immediately
 
 Check the agent's entrypoint.sh script:
 1. Verify it has a shebang: `#!/bin/bash`
 2. Verify it's executable: `chmod +x agents/*/docker/entrypoint.sh`
-3. Check logs in the run directory
+3. Check any logs in the run directory
 
 ### Task Fails but Container Succeeds
 
