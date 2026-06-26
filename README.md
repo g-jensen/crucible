@@ -2,7 +2,7 @@
 
 ## High-level Overview
 
-You define a [task file](https://github.com/g-jensen/crucible/blob/master/example/task.yml) and an [agent directory](https://github.com/g-jensen/crucible/tree/master/agents/pi) (only OpenCode and Pi support for now) that includes both agent configuration and installation scripts. Crucible starts a Docker container, installs the agent, injects specified task information and/or volumes, and waits for the agent to complete the task. It copies relevant output from the agent's environment into a directory of your choosing.
+You define a [task file](https://github.com/g-jensen/crucible/blob/master/example/task.yml) and pick an [agent directory](https://github.com/g-jensen/crucible/tree/master/agents/pi) (only OpenCode and Pi support for now) that includes both agent configuration and installation scripts. Crucible starts a Docker container, installs the agent, injects specified task information and/or volumes, and waits for the agent to complete the task. It copies relevant output from the agent's environment into a directory of your choosing.
 
 ## Requirements
 
